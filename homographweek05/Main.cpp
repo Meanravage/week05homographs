@@ -7,8 +7,7 @@ using namespace std;
 
 
 bool homograph(string file1, string file2);
-//bool nonHomograph(char file1[], char file2[]);
-string canon(vector<string> file);
+string canon(vector<string>& file);
 stack<string> reverseStack(stack<string> stringStack);
 
 
@@ -39,20 +38,22 @@ int main()
 
 bool homograph(string file1, string file2) {
 
-	if (file1 === file2)
+	if (file1.compare(file2) < 0) {
 		return true;
-	else
+	}
+	else if (file1.compare(file2) > 0 ) {
 		return false;
+	}
 }
 
-string canon(vector<string> file) {
+string canon(vector<string>& file) {
 	stack<string> currentFileString;
 
 	for (vector<string>::iterator iter = file.begin(); iter != file.end(); iter++)
 	{
 		if (iter == file.begin())
 		{
-			bool colon = (*iter).find(":") != std::string::npos; //found out what npos was here https://www.geeksforgeeks.org/stringnpos-in-c-with-examples/
+			bool colon = (*iter).find(":") != std::string::npos; //found out what npos means until the end of the string here https://www.geeksforgeeks.org/stringnpos-in-c-with-examples/
 
 			if (*iter == "/" || colon)
 			{
@@ -60,7 +61,7 @@ string canon(vector<string> file) {
 			}
 		}
 
-		if (*iter == "..") 
+		if (*iter == "..")
 		{
 			currentFileString.pop();
 		}
@@ -74,7 +75,7 @@ string canon(vector<string> file) {
 		}
 		else
 		{
-			currentFileString.push(*iter);     
+			currentFileString.push(*iter);
 		}
 	}
 
@@ -102,6 +103,7 @@ string canon(vector<string> file) {
 	}
 
 	return filePathName;
+
 }
 
 stack<string> reverseStack(stack<string> stringStack)
