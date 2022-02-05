@@ -1,3 +1,9 @@
+/******************************************************************************
+* W05 Lab: Path Homograph
+* CSE 453 Group 5
+* Authors: Aaron Allsup, Kenyon Bunker, Santiago Enriquez Benavides, 
+*          Erin Martinez
+*******************************************************************************/
 #include <iostream>
 #include <cstring>
 #include <filesystem>
@@ -21,6 +27,10 @@ void testcase3();
 void manualResults(bool answer);
 void displayComparison(string file1, string file2);
 
+/******************************************************************************
+* Input
+* prompt1
+*******************************************************************************/
 string prompt1(string file1)
 {	
 	cout << "Enter the first file path: ";
@@ -29,6 +39,10 @@ string prompt1(string file1)
 	return file1;
 }
 
+/******************************************************************************
+* Input
+* prompt2
+*******************************************************************************/
 string prompt2(string file2)
 {
 	cout << "Enter the second file path: ";
@@ -37,14 +51,18 @@ string prompt2(string file2)
 	return file2;
 }
 
-
+/******************************************************************************
+* stringConverter
+* Converts the string path parts to a vector and laods the vector 
+*******************************************************************************/
 vector<string> stringConverter(string fileName)
 {
 	vector<string> outputVector;
 	stringstream stream(fileName);
 	string parsed;
 
-	if (fileName.find(":") != std::string::npos)
+	
+	if (fileName.find(":") != std::string::npos) //Checks the entire path for :
 	{
 
 		while (getline(stream, parsed, '\\'))
@@ -52,6 +70,7 @@ vector<string> stringConverter(string fileName)
 			if (parsed == "" || parsed == " ")
 				continue;
 
+			//Adds part to the vector
 			outputVector.push_back(parsed);
 		}
 	}
@@ -62,6 +81,7 @@ vector<string> stringConverter(string fileName)
 			if (parsed == "" || parsed == " ")
 				continue;
 
+			//Adds part to the vector
 			outputVector.push_back(parsed);
 		}
 	}
@@ -69,6 +89,11 @@ vector<string> stringConverter(string fileName)
 	return outputVector;
 }
 
+/******************************************************************************
+* canonicalizer
+* Main canoncalization function
+* We decided to use a map because it is much easier to do comparisons with
+*******************************************************************************/
 string canonicalizer(vector<string> filePath)
 {
 	vector<string> vectFilePath = filePath;
@@ -81,22 +106,27 @@ string canonicalizer(vector<string> filePath)
 
 		if (iter == vectFilePath.begin())
 		{
+			//Accounts for :
 			bool colon = (*iter).find(":") != std::string::npos;
 
+			//Acoutns for /
 			if (*iter == "/" || colon)
 			{
 				filekey = map<int, string>();
 			}
 		}
 
+		//acounts for double dots .. and removes them from the map
 		if (*iter == "..") 
 		{
 			filekey.erase(count);
 		}
+		//accoutns for single dot
 		else if (*iter == ".") 
 		{
 			continue;
 		}
+		//accouts for /
 		else if (*iter == "/")
 		{
 			continue;
@@ -119,6 +149,10 @@ string canonicalizer(vector<string> filePath)
 	return fileString;
 }
 
+/******************************************************************************
+* homograph
+* Main homograph function. determiens if the two file paths are homographs
+*******************************************************************************/
 bool homograph(string filePath1, string filePath2)
 {
 	vector<string> fileVector1 = stringConverter(filePath1);
@@ -139,6 +173,10 @@ bool homograph(string filePath1, string filePath2)
 	}
 }
 
+/******************************************************************************
+* allPathsCheck
+* Tests all testcases plus manual test
+*******************************************************************************/
 void allPathsCheck(string filePath1, string filePath2)
 {
 	bool answer = homograph(filePath1, filePath2);
@@ -152,7 +190,11 @@ void allPathsCheck(string filePath1, string filePath2)
 	cout << endl;
 }
 
-void testcase1() //non-homographs
+/******************************************************************************
+* testcase1
+* non-homographs
+*******************************************************************************/
+void testcase1() //
 {
 	string filepath1 = " /home/user/cse453/";
 	string filepath2 = "../user/../password.txt";
@@ -164,7 +206,11 @@ void testcase1() //non-homographs
 
 }
 
-void testcase2() //non-homographs
+/******************************************************************************
+* testcase2
+* non-homographs
+*******************************************************************************/
+void testcase2()
 {
 	string filepath1 = "/home/user/cse453/";
 	string filepath2 = " /../../secret/password.txt";
@@ -176,7 +222,11 @@ void testcase2() //non-homographs
 
 }
 
-void testcase3() //homographs
+/******************************************************************************
+* testcase3
+* homographs
+*******************************************************************************/
+void testcase3()
 {	
 
 	string filepath1 = "./../home/test.cpp";
@@ -189,7 +239,11 @@ void testcase3() //homographs
 
 }
 
-void testcase4() //homographs
+/******************************************************************************
+* testcase4
+* homographs
+*******************************************************************************/
+void testcase4()
 {
 	string filepath1 = "/home/user/secret/password.txt";
 	string filepath2 = " ./../secret/password.txt";
@@ -201,6 +255,10 @@ void testcase4() //homographs
 
 }
 
+/******************************************************************************
+* manualResults
+* Displays the results for the manual test case
+*******************************************************************************/
 void manualResults(bool answer)
 {
 	if (answer == true)
@@ -213,6 +271,10 @@ void manualResults(bool answer)
 	}
 }
 
+/******************************************************************************
+* displayComparison
+* Displays the comparison information
+*******************************************************************************/
 void displayComparison(string file1, string file2)
 {
 	cout << "The following file paths are being tested for homograph comparison:\n";
@@ -221,6 +283,9 @@ void displayComparison(string file1, string file2)
 
 }
 
+/******************************************************************************
+* Main
+*******************************************************************************/
 int main() 
 {
 	string file1;
@@ -228,6 +293,7 @@ int main()
 	char userInput[2];
 	bool answer = true;
 
+	//Menu
 	cout << "Menu Options\n";
 	cout << "\t M (Manual Input)\n";
 	cout << "\t N (Testcase 1)\n";
@@ -293,6 +359,8 @@ int main()
 		}
 
 	} while (userInput[0] != 'q' && userInput[0] != 'Q');
+
+	//End Menu
 
 	return 0;
 }
