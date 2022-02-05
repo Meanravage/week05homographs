@@ -53,7 +53,7 @@ string prompt2(string file2)
 
 /******************************************************************************
 * stringConverter
-* Converts the string path parts to a vector and laods the vector 
+* Converts the string path parts to a vector and loads the vector 
 *******************************************************************************/
 vector<string> stringConverter(string fileName)
 {
